@@ -26,7 +26,11 @@ def scrap_song_url(url):
     return lyrics
 
 def get_song_lyrics(song_title, artist_name):
+    print("setting up query")
     response = query_genius(song_title, artist_name)
+    print(response["meta"]["status"])
     title, url = parse_genius_response(response)
+    print(title, url)
     lyrics_text = scrap_song_url(url)
+    print(lyrics_text)
     return title, lyrics_text
