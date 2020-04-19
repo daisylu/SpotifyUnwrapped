@@ -18,19 +18,18 @@ def query_genius(song_title, artist_name):
     response = requests.get(search_url, data=data, headers=headers)
     return response.json()
 
-# def scrap_song_url(url):
-#     page = requests.get(url)
-#     html = BeautifulSoup(page.text, "html.parser")
-#     lyrics = html.find("div", class_="lyrics").get_text()
-#     lyrics = unicodedata.normalize("NFKD", lyrics)
-#     return lyrics
+def scrap_song_url(url):
+    print(url)
+    page = requests.get(url)
+    print(page.status)
+    html = BeautifulSoup(page.text, "html.parser")
+    lyrics = html.find("div", class_="lyrics").get_text()
+    print(lyrics)
+    lyrics = unicodedata.normalize("NFKD", lyrics)
+    return lyrics
 
 def get_song_lyrics(song_title, artist_name):
-    print("setting up query")
     response = query_genius(song_title, artist_name)
-    print(response["meta"]["status"])
     title, url = parse_genius_response(response)
-    print(title, url)
-#     lyrics_text = scrap_song_url(url)
-#     print(lyrics_text)
-    return title#, lyrics_text
+    lyrics_text = scrap_song_url(url)
+    return title, lyrics_text
