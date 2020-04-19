@@ -21,7 +21,7 @@ def query_genius(song_title, artist_name):
 def scrap_song_url(url):
     print(url)
     page = requests.get(url)
-    print(page.status)
+    print(page.status_code)
     html = BeautifulSoup(page.text, "html.parser")
     lyrics = html.find("div", class_="lyrics").get_text()
     print(lyrics)
