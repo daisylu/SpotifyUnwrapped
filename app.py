@@ -6,8 +6,8 @@ app = Flask(__name__)
 @app.route('/')
 def hello():
 #     return "hello world"
-    title, lyrics = get_song_lyrics("I can't believe I had you", "Emmit Fenn")
-    return title, lyrics
+    title = get_song_lyrics("I can't believe I had you", "Emmit Fenn")
+    return title
 
 if __name__ == '__main__':
     app.run()
