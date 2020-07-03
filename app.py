@@ -15,11 +15,12 @@ def generate_lyrics():
     if request.method == "POST":
         # user submitted from site
         inputs = {k: v for k, v in request.form.items()}
-        print(inputs)
 
         # get lyrics
         g = GeniusLyrics(token = os.environ["GENIUS_CLIENT_ACCESS_TOKEN"])
         output = g.get_song_lyrics(**inputs)
+
+        print(output)
 
     else:
         output = "" 
