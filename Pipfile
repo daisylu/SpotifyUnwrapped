@@ -11,6 +11,7 @@ pandas = "*"
 python-dotenv = "*"
 bs4 = "*"
 spotipy = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.8"
