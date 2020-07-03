@@ -1,12 +1,11 @@
 from lyrics import get_song_lyrics
-from flask import Flask
+from flask import Flask, request, render_template
 
 app = Flask(__name__)
 
 @app.route('/')
-def hello():
-    title, lyrics = get_song_lyrics("I can't believe I had you", "Emmit Fenn")
-    return title, lyrics
+def home():
+    return render_template(output="")
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0", debug=True)
