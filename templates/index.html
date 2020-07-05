@@ -8,42 +8,41 @@
     <title>Spotify Unwrapped</title>
 </head>
     
-<h1>Home Page</h1>
+<h1> Spotify Top Tracks </h1>
     
 
-	    	<form action="/go" method="post">
+<form action="/go" method="post">
 
 
-	    			<h3>What time range would you like to use?</h3>
-	    			<br />
-	    			<h4>
+        <h3>Time Range</h3>
+        <h4>
 
-							<input type="radio" name="time_range" id="inlineCheckbox1" value="short_term" checked> Last Few Weeks
-							<br />
-							<input type="radio" name="time_range" id="inlineCheckbox2" value="medium_term"> Last Few Months
-							<br />
-							<input type="radio" name="time_range" id="inlineCheckbox3" value="long_term"> Last Few Years
+                <input type="radio" name="time_range" id="inlineCheckbox1" value="short_term" checked> Last Few Weeks
+                <br />
+                <input type="radio" name="time_range" id="inlineCheckbox2" value="medium_term"> Last Few Months
+                <br />
+                <input type="radio" name="time_range" id="inlineCheckbox3" value="long_term"> Last Few Years
 
-					</h4>
-					<br />
-                    <h3>How many tracks do you want?</h3>
-					<h4>
-						<input type="range" min="3" max="50" value="50" name="limit" step="1" onchange="showValue(this.value)" />
-						<span id="range">50</span>
-					</h4>
-						<script type="text/javascript">
-						function showValue(newValue)
-						{
-							document.getElementById("range").innerHTML=newValue;
-						}
-						</script>
+        </h4>
 
-		    	<br />
-		    	<div class="">
-                    
-		    		<center>
-			      		<button type="submit" class="btn btn-danger spotify_button" id="" style=""><h4><i class="fab fa-spotify"></i> Create My Playlist</h4></button>
-			      	</center>
-		      	</div>
+        <h3>Total Tracks</h3>
+        <h4>
+            <input type="range" min="3" max="50" value="50" name="limit" step="1" onchange="showValue(this.value)" />
+            <span id="range">50</span>
+        </h4>
+            <script type="text/javascript">
+            function showValue(newValue)
+            {
+                document.getElementById("range").innerHTML=newValue;
+            }
+            </script>
 
-	      	</form>
+
+<div class="">
+
+    <center>
+        <button type="submit" id="" style=""><h4> Submit </h4></button>
+    </center>
+</div>
+
+</form>
