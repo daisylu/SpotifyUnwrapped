@@ -5,6 +5,7 @@ from flask import Flask, render_template, redirect, request, session, make_respo
 import requests
 import spotipy
 import spotipy.util as util
+import base64
 
 # internal modules
 from spotify_unwrapped.lyrics import GeniusLyrics
@@ -35,23 +36,16 @@ app.secret_key = os.environ["SPOTIFY_CLIENT_SECRET"]
 #         output = "" 
 
 #     return render_template("lyrics.html", output = output)
-
-if os.environ["ENVIRONMENT"] == "dev":
-    APP_HOST = "127.0.0.1:5000"
-    SHOW_DIALOG = True
-else:
-    APP_HOST = "spotifyunwrapped.heroku.com"
-    SHOW_DIALOG = False
     
 API_BASE = 'https://accounts.spotify.com'
-REDIRECT_URI = f"http://{APP_HOST}/callback"
+REDIRECT_URI = os.environ["SPOTIFY_REDIRECT_URL"]
 SCOPE = 'user-top-read'
 CLI_ID = os.environ["SPOTIFY_CLIENT_ID"]
 CLI_SEC = os.environ["SPOTIFY_CLIENT_SECRET"]
 
 @app.route("/")
 def verify():
-    auth_url = f"{API_BASE}/authorize?client_id={CLI_ID}&response_type=code&redirect_uri={REDIRECT_URI}&scope={SCOPE}&show_dialog={SHOW_DIALOG}"
+    auth_url = f"{API_BASE}/authorize?client_id={CLI_ID}&response_type=code&redirect_uri={REDIRECT_URI}&scope={SCOPE}&show_dialog=TRUE"
     return redirect(auth_url)
 
 @app.route("/index")
@@ -61,17 +55,21 @@ def index():
 @app.route("/callback")
 def callback():
     session.clear()
-    code = request.args.get('code')
-
+    
+    code = request.args.get("code")
     auth_token_url = f"{API_BASE}/api/token"
-    res = requests.post(auth_token_url, data={
+    
+    code_payload = {
         "grant_type": "authorization_code",
-        "code": code,
-        "redirect_uri": REDIRECT_URI,
-        "client_id": CLI_ID,
-        "client_secret": CLI_SEC
-        })
-
+        "code": str(code),
+        "redirect_uri": REDIRECT_URI
+    }
+    
+    auth = f"{CLI_ID}:{CLI_SEC}"
+    base64encoded = base64.urlsafe_b64encode(auth.encode("UTF-8")).decode("ascii")
+    headers = {"Authorization": f"Basic {base64encoded}"}
+    
+    res = requests.post(auth_token_url, data = code_payload, headers = headers)
     res_body = res.json()
 
     session["token"] = res_body.get("access_token")
