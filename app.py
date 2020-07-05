@@ -9,6 +9,7 @@ import pandas as pd
 
 # internal modules
 from spotify_unwrapped.lyrics import GeniusLyrics
+from spotify_unwrapped.top_tracks import TopTracksInfo
 
 load_dotenv()
 
@@ -81,24 +82,11 @@ def api_callback():
 
 @app.route("/go", methods=["POST"])
 def go():
-    data = request.form    
-    print(data)
-    sp = spotipy.Spotify(auth=session["token"])
-    response = sp.current_user_top_tracks(limit = data["num_tracks"], time_range = data["time_range"])
-    print(response.keys())
-
-    top_tracks_extracted = []
-    for t in response["items"]:
-        print(t)
-        artist_names = []
-        for a in t["artists"]:
-            artist_names.append(a["name"])
-        top_tracks_extracted.append([t["uri"], t["name"], artist_names, t["popularity"], t["album"]["release_date"]])
-        
-    top_tracks_df = pd.DataFrame(top_tracks_extracted, columns=["uri","track_name","artists","popularity","release_data"])
-    print(top_tracks_df)
+    t = TopTracksInfo(session["token"], request.form)
+    results = t.get_top_tracks_info()
+    results_html = results.to_html()
     
-    return render_template("results.html", data=data, output=top_tracks_df.to_html())
+    return render_template("results.html", data=request.form, output=results_html)
 
 if __name__ == "__main__":
     app.run(debug=True)
