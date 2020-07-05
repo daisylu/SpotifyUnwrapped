@@ -1,25 +1,26 @@
-@charset "utf-8";
+body            { font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;}
+a, h1, h2, h3       { color: #377ba8; }
+h1, h2, h3          { margin: 0; }
+h1              { border-bottom: 2px solid #eee; }
+h2              { font-size: 1.2em; }
+h3              { font-size: 1.0em; }
 
-html, body {
-margin: 0px;
-padding: 0px;
-border: 0px;
-color: #000;
-background: #fff;
+table.dataframe, .dataframe th, .dataframe td {
+  border: none;
+  border-bottom: 1px solid #C8C8C8;
+  border-collapse: collapse;
+  text-align:left;
+  padding: 10px;
+  margin-bottom: 40px;
+  font-size: 0.7em;
 }
-html, body, p, th, td, li, dd, dt {
-font: 1em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+
+.results th {
+    background-color: #add8e6;
+    color: black;
 }
-h1, h2, h3, h4, h5, h6 {
-font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-}
-h1 { font-size: 2em; }
-h2 { font-size: 1.5em; }
-h3 { font-size: 1.2em ; }
-h4 { font-size: 1.0em; }
-h5 { font-size: 0.9em; }
-h6 { font-size: 0.8em; }
-a:link { color: #00f; }
-a:visited { color: #009; }
-a:hover { color: #06f; }
-a:active { color: #0cf; }
+
+tr:nth-child(odd) { background-color:#eee; }
+tr:nth-child(even) { background-color:#fff; }
+
+tr:hover            { background-color: #ffff99;}
