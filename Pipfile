@@ -15,6 +15,7 @@ bs4 = "*"
 spotipy = "*"
 gunicorn = "*"
 flask = "*"
+matplotlib = "*"
 
 [requires]
 python_version = "3.8"
