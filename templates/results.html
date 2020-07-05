@@ -1,14 +1,8 @@
-<div class="">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 
-		<div class="">
-	    	<h1>Spotify Results</h1>
-	    </div>
-		<div class="">
-			<br />
-			<p> Time Range: {{data.time_range}} </p>
-			<p> Limit: {{data.limit}} </p>
+<h1>Spotify Results</h1>
 
-    </div>
+<p> Time Range: {{data.time_range}} </p>
+<p> Limit: {{data.limit}} </p>
 
-    {{ output | safe}}
-</div>
+{{ output | safe}}
