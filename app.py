@@ -1,33 +1,104 @@
+# external libraries
 import os
 from dotenv import load_dotenv
-from flask import Flask, request, render_template
+from flask import Flask, render_template, redirect, request, session, make_response, session, redirect
+import requests
+import spotipy
+import spotipy.util as util
+import pandas as pd
 
+# internal modules
 from spotify_unwrapped.lyrics import GeniusLyrics
 
+load_dotenv()
+
 app = Flask(__name__)
+app.secret_key = os.environ["SPOTIFY_CLIENT_SECRET"]
+
+# @app.route("/")
+# def home():
+#     return render_template("index.html")
+
+# @app.route("/lyrics", methods=["GET", "POST"])
+# def generate_lyrics():
+#     if request.method == "POST":
+#         # user submitted from site
+#         inputs = {k: v for k, v in request.form.items()}
+
+#         # get lyrics
+#         g = GeniusLyrics(token = os.environ["GENIUS_CLIENT_ACCESS_TOKEN"])
+#         output = g.get_song_lyrics(**inputs)
+
+#         print(output)
+
+#     else:
+#         output = "" 
+
+#     return render_template("lyrics.html", output = output)
+
+if os.environ["ENVIRONMENT"] == "dev":
+    APP_HOST = "127.0.0.1:5000"
+    SHOW_DIALOG = True
+else:
+    APP_HOST = "spotifyunwrapped.heroku.com"
+    SHOW_DIALOG = False
+    
+API_BASE = 'https://accounts.spotify.com'
+REDIRECT_URI = f"http://{APP_HOST}/api_callback"
+SCOPE = 'user-top-read'
+CLI_ID = os.environ["SPOTIFY_CLIENT_ID"]
+CLI_SEC = os.environ["SPOTIFY_CLIENT_SECRET"]
 
 @app.route("/")
-def home():
+def verify():
+    auth_url = f"{API_BASE}/authorize?client_id={CLI_ID}&response_type=code&redirect_uri={REDIRECT_URI}&scope={SCOPE}&show_dialog={SHOW_DIALOG}"
+    return redirect(auth_url)
+
+@app.route("/index")
+def index():
     return render_template("index.html")
 
-@app.route("/lyrics", methods=["GET", "POST"])
-def generate_lyrics():
-    if request.method == "POST":
-        # user submitted from site
-        inputs = {k: v for k, v in request.form.items()}
+@app.route("/api_callback")
+def api_callback():
+    session.clear()
+    code = request.args.get('code')
 
-        # get lyrics
-        g = GeniusLyrics(token = os.environ["GENIUS_CLIENT_ACCESS_TOKEN"])
-        output = g.get_song_lyrics(**inputs)
+    auth_token_url = f"{API_BASE}/api/token"
+    res = requests.post(auth_token_url, data={
+        "grant_type": "authorization_code",
+        "code": code,
+        "redirect_uri": f"http://{APP_HOST}/api_callback",
+        "client_id": CLI_ID,
+        "client_secret": CLI_SEC
+        })
 
-        print(output)
+    res_body = res.json()
+    print(res.json())
+    session["token"] = res_body.get("access_token")
 
-    else:
-        output = "" 
+    return redirect("index")
 
-    return render_template("index.html", output = output)
+
+@app.route("/go", methods=["POST"])
+def go():
+    data = request.form    
+    print(data)
+    sp = spotipy.Spotify(auth=session["token"])
+    response = sp.current_user_top_tracks(limit = data["num_tracks"], time_range = data["time_range"])
+    print(response.keys())
+
+    top_tracks_extracted = []
+    for t in response["items"]:
+        print(t)
+        artist_names = []
+        for a in t["artists"]:
+            artist_names.append(a["name"])
+        top_tracks_extracted.append([t["uri"], t["name"], artist_names, t["popularity"], t["album"]["release_date"]])
+        
+    top_tracks_df = pd.DataFrame(top_tracks_extracted, columns=["uri","track_name","artists","popularity","release_data"])
+    print(top_tracks_df)
+    
+    return render_template("results.html", data=data, output=top_tracks_df.to_html())
 
 if __name__ == "__main__":
-    load_dotenv()
-
     app.run(debug=True)
