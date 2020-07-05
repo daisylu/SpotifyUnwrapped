@@ -5,7 +5,6 @@ from flask import Flask, render_template, redirect, request, session, make_respo
 import requests
 import spotipy
 import spotipy.util as util
-import pandas as pd
 
 # internal modules
 from spotify_unwrapped.lyrics import GeniusLyrics
@@ -83,8 +82,7 @@ def api_callback():
 @app.route("/go", methods=["POST"])
 def go():
     t = TopTracksInfo(session["token"], request.form)
-    results = t.get_top_tracks_info()
-    results_html = results.to_html()
+    results_html = t.get_top_tracks_info()
     
     return render_template("results.html", data=request.form, output=results_html)
 
