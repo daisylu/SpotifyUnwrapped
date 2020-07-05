@@ -1,24 +1,49 @@
 <!-- model.html file -->
 <!DOCTYPE html>
 <html lang="en">
-<!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}"> -->
-
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    
 <head>
     <meta charset="UTF-8">
     <title>Spotify Unwrapped</title>
 </head>
+    
+<h1>Home Page</h1>
+    
 
-<h1>Lyrics</h1>
-<br>
-<h2>INPUTS</h2>
-<br>
-<form action="{{ url_for('generate_lyrics')}}"method="post">
-    <input type="text" placeholder="artist name" name="artist_name" value="{{ request.form['artist_name'] }}"/>
-    <input type="text" placeholder="song name" name="song_title" value="{{ request.form['song_title'] }}"/>
-    <br>
-    <button type="submit" class="btn btn-primary btn-block btn-large">Submit</button>
-</form>
-<br> 
-<br>
+	    	<form action="/go" method="post">
 
-{{ output | safe }}
+
+	    			<h3>What time range would you like to use?</h3>
+	    			<br />
+	    			<h4>
+
+							<input type="radio" name="time_range" id="inlineCheckbox1" value="short_term" checked> Last Few Weeks
+							<br />
+							<input type="radio" name="time_range" id="inlineCheckbox2" value="medium_term"> Last Few Months
+							<br />
+							<input type="radio" name="time_range" id="inlineCheckbox3" value="long_term"> Last Few Years
+
+					</h4>
+					<br />
+                    <h3>How many tracks do you want?</h3>
+					<h4>
+						<input type="range" min="3" max="50" value="50" name="num_tracks" step="1" onchange="showValue(this.value)" />
+						<span id="range">50</span>
+					</h4>
+						<script type="text/javascript">
+						function showValue(newValue)
+						{
+							document.getElementById("range").innerHTML=newValue;
+						}
+						</script>
+
+		    	<br />
+		    	<div class="">
+                    
+		    		<center>
+			      		<button type="submit" class="btn btn-danger spotify_button" id="" style=""><h4><i class="fab fa-spotify"></i> Create My Playlist</h4></button>
+			      	</center>
+		      	</div>
+
+	      	</form>
