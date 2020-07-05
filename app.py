@@ -44,7 +44,7 @@ else:
     SHOW_DIALOG = False
     
 API_BASE = 'https://accounts.spotify.com'
-REDIRECT_URI = f"http://{APP_HOST}/api_callback"
+REDIRECT_URI = f"http://{APP_HOST}/callback"
 SCOPE = 'user-top-read'
 CLI_ID = os.environ["SPOTIFY_CLIENT_ID"]
 CLI_SEC = os.environ["SPOTIFY_CLIENT_SECRET"]
@@ -58,8 +58,8 @@ def verify():
 def index():
     return render_template("index.html")
 
-@app.route("/api_callback")
-def api_callback():
+@app.route("/callback")
+def callback():
     session.clear()
     code = request.args.get('code')
 
@@ -67,13 +67,13 @@ def api_callback():
     res = requests.post(auth_token_url, data={
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": f"http://{APP_HOST}/api_callback",
+        "redirect_uri": REDIRECT_URI,
         "client_id": CLI_ID,
         "client_secret": CLI_SEC
         })
 
     res_body = res.json()
-    print(res.json())
+
     session["token"] = res_body.get("access_token")
 
     return redirect("index")
