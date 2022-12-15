@@ -1,6 +1,5 @@
 # external libraries
 import os
-from dotenv import load_dotenv
 from flask import Flask, render_template, redirect, request, session, make_response, session, redirect
 import requests
 import spotipy
@@ -10,8 +9,6 @@ import base64
 # internal modules
 from spotify_unwrapped.lyrics import GeniusLyrics
 from spotify_unwrapped.top_tracks import TopTracksInfo
-
-load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ["SPOTIFY_CLIENT_SECRET"]
